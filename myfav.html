@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Info windows</title>
+    <style>
+        #content {
+            background-color: #EEEEEE;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            height: 60%;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+</head>
+
+<body>
+    <div id="map"></div>
+    <script>
+        function initMap() {
+            var myLatLng = {
+                lat: 43.6532,
+                lng: -79.3832
+            };
+            var ten_Ren_Tea = {
+                lat: 43.842468,
+                lng: -79.390832
+            };
+            var dragon_Boat_Dimsum = {
+                lat: 43.848780,
+                lng: -79.376514
+            };
+            var bayview_village = {
+                lat: 43.769048,
+                lng: -79.385438
+            };
+
+
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 11,
+                center: bayview_village
+            });
+
+            var infoWindow = new google.maps.InfoWindow({
+                map: map
+            });
+
+
+            var place_1 = '<div id="content">' +
+                '<div id="siteNotice">' +
+                '</div>' +
+                '<h1 id="firstHeading" class="firstHeading">Ten Ren Tea</h1>' +
+                '<div id="bodyContent">' +
+                '<p><b>Founded in 1953[2] in Taiwan by Ray Ho Lee, "Ten Rens Group 天仁集團" also operates Cha for Tea teahouses in Southern California as well as " Ten Rens Tea 天仁茗茶 " stores in California and six Ten Rens in New York, and other places, and through the subsidiary " Ten Fu Group 天福集團" produces and sells tea products in China, where much of its activity now takes place.[3]</b></p>' +
+                '</div>' +
+                '</div>';
+
+            var place_2 = '<div id="content">' +
+                '<div id="siteNotice">' +
+                '</div>' +
+                '<h1 id="firstHeading" class="firstHeading">Dragon Boat</h1>' +
+                '<div id="bodyContent">' +
+                '<p><b>Traditional Chinese cuisine & dim sum in a bustling room with large seafood tanks on display.</b></p>' +
+                '</div>' +
+                '</div>';
+
+            var place_3 = '<div id="content">' +
+                '<div id="siteNotice">' +
+                '</div>' +
+                '<h1 id="firstHeading" class="firstHeading">Bayview Village</h1>' +
+                '<div id="bodyContent">' +
+                '<p><b>Bayview Village Shopping Centre is a shopping mall in the North York area of Toronto, Ontario, Canada, containing over 110 stores. The 440,000-square-foot (41,000 m2) shopping mall is located at Bayview Avenue and Sheppard Avenue in the community of Willowdale, and neighbourhood of Bayview Village.</b></p>' +
+                '</div>' +
+                '</div>';
+
+            var infowindow = new google.maps.InfoWindow({
+                content: place_1
+            });
+
+            var infowindow2 = new google.maps.InfoWindow({
+                content: place_2
+            });
+
+            var infowindow3 = new google.maps.InfoWindow({
+                content: place_3
+            });
+
+            marker1 = new google.maps.Marker({
+                position: ten_Ren_Tea,
+                map: map,
+                title: 'ten_Ren_Tea'
+            });
+
+            marker2 = new google.maps.Marker({
+                position: dragon_Boat_Dimsum,
+                map: map,
+                title: 'dragon_Boat_Dimsum'
+            });
+
+            marker3 = new google.maps.Marker({
+                position: bayview_village,
+                map: map,
+                title: 'bayview_village'
+            });
+
+            marker1.addListener('click', function() {
+                infowindow.open(map, marker1);
+            });
+
+            marker2.addListener('click', function() {
+                infowindow2.open(map, marker2);
+            });
+
+            marker3.addListener('click', function() {
+                infowindow3.open(map, marker3);
+            });
+
+            var marker_map = {
+                marker1: marker1,
+                marker2: marker2,
+                marker3: marker3
+            };
+
+            $('input[type="checkbox"]').click(function() {
+                var marker = marker_map[$(this).attr('data-marker')];
+                if ($(this).is(":checked")) {
+                    marker.setOpacity(1);
+                } else {
+                    marker.setOpacity(0);
+                }
+            });
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    infoWindow.setPosition(pos);
+                    infoWindow.setContent('Location found.');
+                    map.setCenter(pos);
+                }, function() {
+                    handleLocationError(true, infoWindow, map.getCenter());
+                });
+            } else {
+                // Browser doesn't support Geolocation
+                handleLocationError(false, infoWindow, map.getCenter());
+            }
+        }
+
+        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+            infoWindow.setPosition(pos);
+            infoWindow.setContent(browserHasGeolocation ?
+                'Error: The Geolocation service failed.' :
+                'Error: Your browser doesn\'t support geolocation.');
+        }
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCac8Qfy70z8qQIFcQIKGKm3TJk6qeVnAk&callback=initMap">
+    </script>
+    <br>
+    <form>
+        Ten Ren's Tea <input type="checkbox" data-marker="marker1"><br>
+        Dragon Boat <input type="checkbox" data-marker="marker2"><br>
+        Bayview Village <input type="checkbox" data-marker="marker3"><br>
+    </form>
+</body>
+
+</html>
